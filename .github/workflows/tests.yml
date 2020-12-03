@@ -13,12 +13,27 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Setup .NET Core
+    - name: Setup .NET Core 5.0.100
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 5.0.100
-    - name: Test Gatekeeper.SCIM.Client.Tests
-      run: dotnet test Gatekeeper.SCIM.Client.Tests/ --collect:"XPlat Code Coverage" -r TestResults/
+    - name: Setup .NET Core 3.1.x
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '3.1.x'
+    - name: Test Gatekeeper.SCIM.Client.Tests.Unit
+      run: dotnet test Gatekeeper.SCIM.Client.Tests.Unit/ --collect:"XPlat Code Coverage" -r TestResults/
+    - name: Clone Microsoft SCIM Reference Server
+      uses: actions/checkout@v2
+      with:
+        repository: AzureAD/SCIMReferenceCode
+        ref: ae181c1d0800a2a22333f0a4081c4012f39028e8
+        path: SCIMReferenceCode
+    - name: Run Reference Server
+      run: ASPNETCORE_ENVIRONMENT=Development ASPNETCORE_URLS=http://localhost:5000 nohup dotnet run > /dev/null 2>&1 &
+      working-directory: SCIMReferenceCode/Microsoft.SCIM.WebHostSample/ 
+    - name: Test Gatekeeper.SCIM.Client.Tests.Integration
+      run: dotnet test Gatekeeper.SCIM.Client.Tests.Integration/ --collect:"XPlat Code Coverage" -r TestResults/
     - uses: codecov/codecov-action@v1
       with:
         directory: TestResults/
