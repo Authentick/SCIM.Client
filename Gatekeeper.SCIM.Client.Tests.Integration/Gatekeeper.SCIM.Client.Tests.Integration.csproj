@@ -22,6 +22,8 @@
   </ItemGroup>
 
   <ItemGroup>
+
+    <ProjectReference Include="..\..\SCIMReferenceCode\Microsoft.SCIM.WebHostSample\Microsoft.SCIM.WebHostSample.csproj" />
     <ProjectReference Include="..\Gatekeeper.SCIM.Client\Gatekeeper.SCIM.Client.csproj" />
   </ItemGroup>
 

@@ -2,9 +2,9 @@ using System;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Gatekeeper.SCIM.Client.Tests.Unit
+namespace Gatekeeper.SCIM.Client.Tests.Integration
 {
-    public class ClientTest
+    public class ClientTest : IClassFixture<ServerFixture>
     {
         [Fact]
         public async Task Test1()
