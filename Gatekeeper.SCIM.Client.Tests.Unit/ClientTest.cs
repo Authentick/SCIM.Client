@@ -9,7 +9,7 @@ namespace Gatekeeper.SCIM.Client.Tests.Unit
         [Fact]
         public async Task Test1()
         {
-            Client client = new Client(new Uri("http://localhost:5001/scim/"));
+            Client client = new Client(new Uri("http://localhost:5000/scim/"));
         }
     }
 }
