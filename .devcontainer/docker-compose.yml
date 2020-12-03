@@ -1,7 +1,7 @@
 version: '3'
 services:
   ldapserver:
-      image: ghcr.io/getgatekeeper/scim-client-devcontainer:sha-94c0a3e
+      image: ghcr.io/getgatekeeper/scim-client-devcontainer:sha-760bd1c
       volumes:
         - .:/workspace:cached
       command: /bin/sh -c "while sleep 1000; do :; done"
