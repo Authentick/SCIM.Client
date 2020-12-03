@@ -1,7 +1,7 @@
 version: '3'
 services:
   ldapserver:
-      image: mcr.microsoft.com/dotnet/sdk:5.0
+      image: ghcr.io/getgatekeeper/scim-client-devcontainer:sha-a327ba4
       volumes:
         - .:/workspace:cached
         - /var/run/docker.sock:/var/run/docker-host.sock
