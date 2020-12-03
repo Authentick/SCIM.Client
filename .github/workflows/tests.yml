@@ -33,7 +33,7 @@ jobs:
       run: ASPNETCORE_ENVIRONMENT=Development ASPNETCORE_URLS=http://localhost:5000 nohup dotnet run > /dev/null 2>&1 &
       working-directory: SCIMReferenceCode/Microsoft.SCIM.WebHostSample/ 
     - name: Test Gatekeeper.SCIM.Client.Tests.Integration
-      run: dotnet test Gatekeeper.SCIM.Client.Tests.Integration/ --collect:"XPlat Code Coverage" -r TestResults/
+      run: sleep 5 && dotnet test Gatekeeper.SCIM.Client.Tests.Integration/ --collect:"XPlat Code Coverage" -r TestResults/
     - uses: codecov/codecov-action@v1
       with:
         directory: TestResults/
