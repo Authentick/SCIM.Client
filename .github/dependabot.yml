@@ -5,7 +5,12 @@ updates:
   schedule:
     interval: "daily"
 - package-ecosystem: nuget	
-  directory: "/Gatekeeper.SCIM.Client.Tests"
+  directory: "/Gatekeeper.SCIM.Client.Tests.Integration"
   schedule:	
     interval: daily	
   open-pull-requests-limit: 10	
+- package-ecosystem: nuget	
+  directory: "/Gatekeeper.SCIM.Client.Tests.Unit"
+  schedule:	
+    interval: daily	
+  open-pull-requests-limit: 10
