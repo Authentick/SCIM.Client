@@ -1,8 +1,12 @@
+using System.Text.Json.Serialization;
+
 namespace Gatekeeper.SCIM.Client.Schema.Common20
 {
-    class Common
+    public class Common
     {
-        public string Id { get; set; }
-        public string ExternalId { get; set; }
+        [JsonPropertyName("id")]
+        public string Id { get; set; } = null!;
+        [JsonPropertyName("externalId")]
+        public string? ExternalId { get; set; }
     }
 }

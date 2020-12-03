@@ -1,29 +1,44 @@
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
+using Gatekeeper.SCIM.Client.Schema.Common20;
 
 namespace Gatekeeper.SCIM.Client.Schema.Core20
 {
-    class User : ISchema
+    public class User : Common, ISchema
     {
         public string SchemaIdentifier => "urn:ietf:params:scim:schemas:core:2.0:User";
 
-        string UserName { get; set; }
-        INameComponent Name { get; set; }
-        string DisplayName { get; set; }
-        string NickName { get; set; }
-        string ProfileUrl { get; set; }
-        string Title { get; set; }
-        string UserType { get; set; }
+        [JsonPropertyName("userName")]
+        public string UserName { get; set; } = null!;
+        [JsonPropertyName("name")]
+        public INameComponent? Name { get; set; }
+        [JsonPropertyName("displayName")]
+        public string? DisplayName { get; set; }
+        [JsonPropertyName("nickName")]
+        public string? NickName { get; set; }
+        [JsonPropertyName("profileUrl")]
+        public string? ProfileUrl { get; set; }
+        [JsonPropertyName("title")]
+        public string? Title { get; set; }
+        [JsonPropertyName("userType")]
+        public string? UserType { get; set; }
         // TODO: Use enum
-        string PreferredLanguage { get; set; }
+        [JsonPropertyName("preferredLanguage")]
+        public string? PreferredLanguage { get; set; }
         // TODO: Use enum
-        string Locale { get; set; }
+        [JsonPropertyName("locale")]
+        public string? Locale { get; set; }
         // TODO: USe enum
-        string Timezone { get; set; }
-        bool Active { get; set; }
-        string Password { get; set; }
-        IEnumerable<string> Groups { get; set; }
+        [JsonPropertyName("timezone")]
+        public string? Timezone { get; set; }
+        [JsonPropertyName("active")]
+        public bool? Active { get; set; }
+        [JsonPropertyName("password")]
+        public string? Password { get; set; }
+        [JsonPropertyName("groups")]
+        public IEnumerable<string>? Groups { get; set; }
 
-        interface INameComponent
+        public interface INameComponent
         {
             string value { get; set; }
         }

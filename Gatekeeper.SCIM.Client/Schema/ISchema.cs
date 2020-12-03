@@ -1,6 +1,6 @@
 namespace Gatekeeper.SCIM.Client.Schema
 {
-    interface ISchema
+    public interface ISchema
     {
         string SchemaIdentifier { get; }
     }
