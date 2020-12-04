@@ -1,5 +1,5 @@
 using System;
-using System.ComponentModel;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Gatekeeper.SCIM.Client.Action;
@@ -33,14 +33,15 @@ namespace Gatekeeper.SCIM.Client.Tests.Integration
                 UserName = "Test1",
                 Active = false,
             };
-            CreateUserAction createUserAction = new CreateUserAction(user);
-            CreateUserResult createUserResult = await client.PerformAction<CreateUserResult>(createUserAction);
+            CreateAction<User> createUserAction = new CreateAction<User>(user);
+            CreateResult<User> createUserResult = await client.PerformAction<CreateResult<User>>(createUserAction);
             Assert.Equal(StateEnum.Success, createUserResult.ResultStatus);
             user.AsSource()
                 .OfLikeness<User>()
                 .Without(u => u.Id)
-                .ShouldEqual(createUserResult.User);
-            user.Id = createUserResult.User.Id;
+                .Without(u => u.Meta)
+                .ShouldEqual(createUserResult.Resource);
+            user.Id = createUserResult.Resource.Id;
 
             // A lookup now should show the user
             GetUsersResult secondGetUsersRes = (await client.PerformAction<GetUsersResult>(new GetUsersAction()));
@@ -48,6 +49,7 @@ namespace Gatekeeper.SCIM.Client.Tests.Integration
             Assert.Equal(1, secondGetUsersRes.Users.Count());
             user.AsSource()
                 .OfLikeness<User>()
+                .Without(u => u.Meta)
                 .ShouldEqual(secondGetUsersRes.Users.First());
             Assert.Equal(StateEnum.Success, secondGetUsersRes.ResultStatus);
 
@@ -63,11 +65,40 @@ namespace Gatekeeper.SCIM.Client.Tests.Integration
 
             user.AsSource()
                 .OfLikeness<User>()
+                .Without(u => u.Meta)
                 .ShouldEqual(updateUserResult.User);
 
+            // Create a group with our only user inside
+            Group group = new Group
+            {
+                ExternalId = Guid.NewGuid().ToString(),
+                DisplayName = "My test group",
+                Members = new List<Group.GroupMembership>() {
+                    new Group.GroupMembership {
+                        Value = user.Id,
+                    },
+                },
+            };
+            CreateAction<Group> createGroupAction = new CreateAction<Group>(group);
+            CreateResult<Group> createGroupResult = await client.PerformAction<CreateResult<Group>>(createGroupAction);
+
+            group.AsSource()
+                .OfLikeness<Group>()
+                .Without(g => g.Id)
+                .Without(u => u.Meta)
+                .Without(u => u.Members)
+                .ShouldEqual(createGroupResult.Resource);
+            
+            group.Members.AsSource()
+                .OfLikeness<IEnumerable<Group.GroupMembership>>()
+                .ShouldEqual(createGroupResult.Resource.Members);
+
+            // Querying the user should now contain the group
+
+
             // Recreating the same user should fail
-            createUserAction = new CreateUserAction(user);
-            createUserResult = await client.PerformAction<CreateUserResult>(createUserAction);
+            createUserAction = new CreateAction<User>(user);
+            createUserResult = await client.PerformAction<CreateResult<User>>(createUserAction);
             Assert.Equal(StateEnum.Failure, createUserResult.ResultStatus);
 
             // Deleting the user should work

@@ -36,25 +36,43 @@ namespace Gatekeeper.SCIM.Client
 
             switch (action)
             {
-                case CreateUserAction createUserAction:
-                    HttpResponseMessage response = await client.PostAsJsonAsync<User>("Users", createUserAction.User, jsonSerializerOptions);
+                case CreateAction<User> createUserAction:
+                    HttpResponseMessage response = await client.PostAsJsonAsync<User>("Users", createUserAction.Resource, jsonSerializerOptions);
 
                     if (response.StatusCode == System.Net.HttpStatusCode.Created)
                     {
-                        return (TResult)(object)new CreateUserResult
+                        return (TResult)(object)new CreateResult<User>
                         {
                             ResultStatus = StateEnum.Success,
-                            User = await response.Content.ReadFromJsonAsync<User>(),
+                            Resource = await response.Content.ReadFromJsonAsync<User>(),
                         };
                     }
                     else
                     {
-                        return (TResult)(object)new CreateUserResult
+                        return (TResult)(object)new CreateResult<User>
                         {
                             ResultStatus = StateEnum.Failure,
                         };
                     }
 
+                case CreateAction<Group> createGroupAction:
+                    response = await client.PostAsJsonAsync<Group>("Groups", createGroupAction.Resource, jsonSerializerOptions);
+
+                    if (response.StatusCode == System.Net.HttpStatusCode.Created)
+                    {
+                        return (TResult)(object)new CreateResult<Group>
+                        {
+                            ResultStatus = StateEnum.Success,
+                            Resource = await response.Content.ReadFromJsonAsync<Group>(),
+                        };
+                    }
+                    else
+                    {
+                        return (TResult)(object)new CreateResult<Group>
+                        {
+                            ResultStatus = StateEnum.Failure,
+                        };
+                    }
 
                 case GetUsersAction getUsersAction:
                     FilterResponse? filterResponse = await client.GetFromJsonAsync<FilterResponse>("Users");

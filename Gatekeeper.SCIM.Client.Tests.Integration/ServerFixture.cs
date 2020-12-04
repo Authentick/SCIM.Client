@@ -41,7 +41,7 @@ namespace Gatekeeper.SCIM.Client.Tests.Integration
             HttpResponseMessage response = await client.GetAsync("token");
             string responseBody = await response.Content.ReadAsStringAsync();
 
-            TokenReply? replyObj = JsonSerializer.Deserialize<TokenReply>(responseBody);
+            TokenReply replyObj = JsonSerializer.Deserialize<TokenReply>(responseBody);
 
             if (replyObj != null && replyObj.Token != null)
             {
