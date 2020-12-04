@@ -38,23 +38,63 @@ namespace Gatekeeper.SCIM.Client
             {
                 case CreateUserAction createUserAction:
                     HttpResponseMessage response = await client.PostAsJsonAsync<User>("Users", createUserAction.User, jsonSerializerOptions);
-                    return (TResult)(object)new CreateUserResult { ResultStatus = StateEnum.Success };
+
+                    if (response.StatusCode == System.Net.HttpStatusCode.Created)
+                    {
+                        return (TResult)(object)new CreateUserResult
+                        {
+                            ResultStatus = StateEnum.Success,
+                            User = await response.Content.ReadFromJsonAsync<User>(),
+                        };
+                    }
+                    else
+                    {
+                        return (TResult)(object)new CreateUserResult
+                        {
+                            ResultStatus = StateEnum.Failure,
+                        };
+                    }
+
 
                 case GetUsersAction getUsersAction:
                     FilterResponse? filterResponse = await client.GetFromJsonAsync<FilterResponse>("Users");
 
                     if (filterResponse != null)
                     {
-                        GetUsersResult result = new GetUsersResult
+                        return (TResult)(object)new GetUsersResult
                         {
                             ResultStatus = StateEnum.Success,
                             Users = filterResponse.Resources,
                         };
-
-                        return (TResult)(object)result;
                     }
 
                     return (TResult)(object)new GetUsersResult { ResultStatus = StateEnum.Failure };
+                case UpdateUserAction updateUserAction:
+                    if (updateUserAction.User.Id == null)
+                    {
+                        throw new Exception("No user ID provided for user");
+                    }
+
+                    response = await client.PutAsJsonAsync<User>("Users/" + updateUserAction.User.Id, updateUserAction.User, jsonSerializerOptions);
+
+                    return (TResult)(object)new UpdateUserResult
+                    {
+                        ResultStatus = StateEnum.Success,
+                        User = await response.Content.ReadFromJsonAsync<User>(),
+                    };
+
+                case DeleteUserAction deleteUserAction:
+                    if (deleteUserAction.User.Id == null)
+                    {
+                        throw new Exception("No user ID provided for user");
+                    }
+
+                    response = await client.DeleteAsync("Users/" + deleteUserAction.User.Id);
+
+                    return (TResult)(object)new DeleteUserResult
+                    {
+                        ResultStatus = StateEnum.Success,
+                    };
             }
 
             throw new NotImplementedException();
