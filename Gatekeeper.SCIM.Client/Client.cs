@@ -74,6 +74,34 @@ namespace Gatekeeper.SCIM.Client
                         };
                     }
 
+                case GetAction<User> getUserAction:
+                    User reply = await client.GetFromJsonAsync<User>("Users/" + getUserAction.Id);
+
+                    if (reply != null)
+                    {
+                        return (TResult)(object)new GetResult<User>
+                        {
+                            ResultStatus = StateEnum.Success,
+                            Resource = reply,
+                        };
+                    }
+
+                    return (TResult)(object)new GetUsersResult { ResultStatus = StateEnum.Failure };
+
+                case GetAction<Group> getGroupAction:
+                    Group groupReply = await client.GetFromJsonAsync<Group>("Groups/" + getGroupAction.Id);
+
+                    if (groupReply != null)
+                    {
+                        return (TResult)(object)new GetResult<Group>
+                        {
+                            ResultStatus = StateEnum.Success,
+                            Resource = groupReply,
+                        };
+                    }
+
+                    return (TResult)(object)new GetUsersResult { ResultStatus = StateEnum.Failure };
+
                 case GetUsersAction getUsersAction:
                     FilterResponse? filterResponse = await client.GetFromJsonAsync<FilterResponse>("Users");
 

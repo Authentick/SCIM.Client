@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Gatekeeper.SCIM.Client.Action;
 using Gatekeeper.SCIM.Client.Result;
@@ -75,7 +76,8 @@ namespace Gatekeeper.SCIM.Client.Tests.Integration
                 DisplayName = "My test group",
                 Members = new List<Group.GroupMembership>() {
                     new Group.GroupMembership {
-                        Value = user.Id,
+                        Value = createUserResult.Resource.Id,
+                        Ref = createUserResult.Resource.Meta.Location,
                     },
                 },
             };
@@ -88,13 +90,34 @@ namespace Gatekeeper.SCIM.Client.Tests.Integration
                 .Without(u => u.Meta)
                 .Without(u => u.Members)
                 .ShouldEqual(createGroupResult.Resource);
-            
+
             group.Members.AsSource()
                 .OfLikeness<IEnumerable<Group.GroupMembership>>()
                 .ShouldEqual(createGroupResult.Resource.Members);
 
-            // Querying the user should now contain the group
+            // Single querying the user should work
+            GetAction<User> getUserAction = new GetAction<User>(user.Id);
+            GetResult<User> getUserResult = await client.PerformAction<GetResult<User>>(getUserAction);
 
+            user.AsSource()
+                .OfLikeness<User>()
+                .Without(g => g.Meta)
+                .ShouldEqual(getUserResult.Resource);
+
+            // Single querying the group should work
+            GetAction<Group> getGroupAction = new GetAction<Group>(createGroupResult.Resource.Id);
+            GetResult<Group> getGroupResult = await client.PerformAction<GetResult<Group>>(getGroupAction);
+
+            group.AsSource()
+                .OfLikeness<Group>()
+                .Without(g => g.Meta)
+                .Without(g => g.Members)
+                .Without(g => g.Id)
+                .ShouldEqual(getGroupResult.Resource);
+
+            group.Members.AsSource()
+                .OfLikeness<IEnumerable<Group.GroupMembership>>()
+                .ShouldEqual(getGroupResult.Resource.Members);
 
             // Recreating the same user should fail
             createUserAction = new CreateAction<User>(user);
