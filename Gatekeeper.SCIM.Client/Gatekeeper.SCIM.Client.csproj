@@ -3,6 +3,23 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <Nullable>enable</Nullable>
+
+    <Version>0.0.1-alpha</Version>
+    <Authors>Lukas Reschke</Authors>
+    <Company>Gatekeeper</Company>
+    <Description>
+      This library implements a SCIM client in C#.
+
+      API reference can be found at https://github.com/GetGatekeeper/SCIM.Client
+    </Description>
+    <PackageLicenseExpression>AGPL-3.0-or-later</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/GetGatekeeper/SCIM.Client</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/GetGatekeeper/SCIM.Client.git</RepositoryUrl>
+    <PackageReleaseNotes>
+      Initial release.
+    </PackageReleaseNotes>
+    <RepositoryType>git</RepositoryType>
+    <Title>Gatekeeper.SCIM.Client</Title>
   </PropertyGroup>
 
 </Project>
