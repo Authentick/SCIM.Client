@@ -33,6 +33,10 @@ namespace Gatekeeper.SCIM.Client.Tests.Integration
                 ExternalId = userId.ToString(),
                 UserName = "Test1",
                 Active = false,
+                Emails = new List<User.EmailAttribute>{
+                    new User.EmailAttribute { Value = "test1@example.com" },
+                    new User.EmailAttribute { Value = "test2@example.com" },
+                },
             };
             CreateAction<User> createUserAction = new CreateAction<User>(user);
             CreateResult<User> createUserResult = await client.PerformAction<CreateResult<User>>(createUserAction);
@@ -41,7 +45,11 @@ namespace Gatekeeper.SCIM.Client.Tests.Integration
                 .OfLikeness<User>()
                 .Without(u => u.Id)
                 .Without(u => u.Meta)
+                .Without(u => u.Emails)
                 .ShouldEqual(createUserResult.Resource);
+            user.Emails.AsSource()
+                .OfLikeness<List<User.EmailAttribute>>()
+                .ShouldEqual(createUserResult.Resource.Emails);
             user.Id = createUserResult.Resource.Id;
 
             // A lookup now should show the user
@@ -51,7 +59,11 @@ namespace Gatekeeper.SCIM.Client.Tests.Integration
             user.AsSource()
                 .OfLikeness<User>()
                 .Without(u => u.Meta)
+                .Without(u => u.Emails)
                 .ShouldEqual(secondGetUsersRes.Users.First());
+            user.Emails.AsSource()
+                .OfLikeness<List<User.EmailAttribute>>()
+                .ShouldEqual(secondGetUsersRes.Users.First().Emails);
             Assert.Equal(StateEnum.Success, secondGetUsersRes.ResultStatus);
 
             // Assign the ID from the SCIM system
@@ -67,7 +79,11 @@ namespace Gatekeeper.SCIM.Client.Tests.Integration
             user.AsSource()
                 .OfLikeness<User>()
                 .Without(u => u.Meta)
+                .Without(u => u.Emails)
                 .ShouldEqual(updateUserResult.User);
+            user.Emails.AsSource()
+                .OfLikeness<List<User.EmailAttribute>>()
+                .ShouldEqual(updateUserResult.User.Emails);
 
             // Create a group with our only user inside
             Group group = new Group
@@ -102,7 +118,11 @@ namespace Gatekeeper.SCIM.Client.Tests.Integration
             user.AsSource()
                 .OfLikeness<User>()
                 .Without(g => g.Meta)
+                .Without(u => u.Emails)
                 .ShouldEqual(getUserResult.Resource);
+            user.Emails.AsSource()
+                .OfLikeness<List<User.EmailAttribute>>()
+                .ShouldEqual(getUserResult.Resource.Emails);
 
             // Single querying the group should work
             GetAction<Group> getGroupAction = new GetAction<Group>(createGroupResult.Resource.Id);

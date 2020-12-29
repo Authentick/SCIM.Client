@@ -10,9 +10,6 @@ namespace Gatekeeper.SCIM.Client.Schema.Core20
         [JsonPropertyName("userName")]
         public string UserName { get; set; } = null!;
 
-        [JsonPropertyName("name")]
-        public INameComponent? Name { get; set; }
-
         [JsonPropertyName("displayName")]
         public string? DisplayName { get; set; }
 
@@ -58,40 +55,19 @@ namespace Gatekeeper.SCIM.Client.Schema.Core20
         [JsonPropertyName("meta")]
         public IResource.MetaResourceData? Meta { get; set; }
 
-        public class GroupMembership
+        [JsonPropertyName("emails")]
+        public List<EmailAttribute>? Emails { get; set; }
+
+        public class EmailAttribute
         {
             [JsonPropertyName("value")]
             public string? Value { get; set; }
         }
 
-        public interface INameComponent
+        public class GroupMembership
         {
-            string value { get; set; }
-        }
-
-        class FormattedName : INameComponent
-        {
-            public string value { get; set; }
-        }
-
-        class FamilyName : INameComponent
-        {
-            public string value { get; set; }
-        }
-
-        class GivenName : INameComponent
-        {
-            public string value { get; set; }
-        }
-
-        class HonoricPrefix : INameComponent
-        {
-            public string value { get; set; }
-        }
-
-        class HonoricSuffix : INameComponent
-        {
-            public string value { get; set; }
+            [JsonPropertyName("value")]
+            public string? Value { get; set; }
         }
     }
 }
