@@ -6,7 +6,7 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
 
-    <Version>0.0.2-alpha</Version>
+    <Version>0.0.3-alpha</Version>
     <Authors>Lukas Reschke</Authors>
     <Company>Gatekeeper</Company>
     <Description>
@@ -18,7 +18,7 @@
     <PackageProjectUrl>https://github.com/GetGatekeeper/SCIM.Client</PackageProjectUrl>
     <RepositoryUrl>https://github.com/GetGatekeeper/SCIM.Client.git</RepositoryUrl>
     <PackageReleaseNotes>
-      Add support for email attribute.
+      Parse Errors.
     </PackageReleaseNotes>
     <RepositoryType>git</RepositoryType>
     <Title>Gatekeeper.SCIM.Client</Title>

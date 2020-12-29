@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
 using System.Threading.Tasks;
 using Gatekeeper.SCIM.Client.Action;
 using Gatekeeper.SCIM.Client.Result;
@@ -40,6 +39,7 @@ namespace Gatekeeper.SCIM.Client.Tests.Integration
             };
             CreateAction<User> createUserAction = new CreateAction<User>(user);
             CreateResult<User> createUserResult = await client.PerformAction<CreateResult<User>>(createUserAction);
+
             Assert.Equal(StateEnum.Success, createUserResult.ResultStatus);
             user.AsSource()
                 .OfLikeness<User>()

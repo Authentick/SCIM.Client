@@ -49,9 +49,13 @@ namespace Gatekeeper.SCIM.Client
                     }
                     else
                     {
+                        ErrorResult errorResult = await response.Content.ReadFromJsonAsync<ErrorResult>();
+
                         return (TResult)(object)new CreateResult<User>
                         {
                             ResultStatus = StateEnum.Failure,
+                            ErrorDetail = (errorResult.Detail != null) ? errorResult.Detail : null,
+                            ScimType = (errorResult.ScimType != null) ? errorResult.ScimType : null,
                         };
                     }
 

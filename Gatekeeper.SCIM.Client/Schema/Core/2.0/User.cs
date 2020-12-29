@@ -62,6 +62,9 @@ namespace Gatekeeper.SCIM.Client.Schema.Core20
         {
             [JsonPropertyName("value")]
             public string? Value { get; set; }
+
+            [JsonPropertyName("primary")]
+            public bool Primary { get; set; }
         }
 
         public class GroupMembership
