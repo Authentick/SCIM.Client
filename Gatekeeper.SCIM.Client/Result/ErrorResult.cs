@@ -1,3 +1,4 @@
+using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 
 namespace Gatekeeper.SCIM.Client.Result
@@ -8,20 +9,31 @@ namespace Gatekeeper.SCIM.Client.Result
         public string? Detail { get; set; }
 
         [JsonPropertyName("scimType")]
+	    [JsonConverter(typeof(JsonStringEnumConverter))]
         public ScimTypeEnum? ScimType { get; set; }
 
         public enum ScimTypeEnum
         {
-            invalidFilter = 1,
-            tooMany = 2,
-            uniqueness = 3,
-            mutability = 4,
-            invalidSyntax = 5,
-            invalidPath = 6,
-            noTarget = 7,
-            invalidValue = 8,
-            invalidVers = 9,
-            sensitive = 10,
+	        [EnumMember(Value = "invalidFilter")]
+            invalidFilter,
+	        [EnumMember(Value = "tooMany")]
+            tooMany,
+	        [EnumMember(Value = "uniqueness")]
+            uniqueness,
+	        [EnumMember(Value = "mutability")]
+            mutability,
+	        [EnumMember(Value = "invalidSyntax")]
+            invalidSyntax,
+	        [EnumMember(Value = "invalidPath")]
+            invalidPath,
+	        [EnumMember(Value = "noTarget")]
+            noTarget,
+	        [EnumMember(Value = "invalidValue")]
+            invalidValue,
+	        [EnumMember(Value = "invalidVers")]
+            invalidVers,
+	        [EnumMember(Value = "sensitive")]
+            sensitive,
         }
     }
 }

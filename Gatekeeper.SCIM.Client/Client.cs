@@ -50,7 +50,7 @@ namespace Gatekeeper.SCIM.Client
                     else
                     {
                         ErrorResult errorResult = await response.Content.ReadFromJsonAsync<ErrorResult>();
-
+                       
                         return (TResult)(object)new CreateResult<User>
                         {
                             ResultStatus = StateEnum.Failure,
@@ -61,6 +61,7 @@ namespace Gatekeeper.SCIM.Client
 
                 case CreateAction<Group> createGroupAction:
                     response = await client.PostAsJsonAsync<Group>("Groups", createGroupAction.Resource, jsonSerializerOptions);
+                    System.Console.WriteLine(await response.Content.ReadAsStringAsync());
 
                     if (response.StatusCode == System.Net.HttpStatusCode.Created)
                     {
@@ -133,15 +134,33 @@ namespace Gatekeeper.SCIM.Client
                         User = await response.Content.ReadFromJsonAsync<User>(),
                     };
 
-                case DeleteUserAction deleteUserAction:
-                    if (deleteUserAction.User.Id == null)
+                case UpdateGroupAction updateGroupAction:
+                    if (updateGroupAction.Group.Id == null)
                     {
-                        throw new Exception("No user ID provided for user");
+                        throw new Exception("No user ID provided for group");
                     }
 
-                    response = await client.DeleteAsync("Users/" + deleteUserAction.User.Id);
+                    response = await client.PutAsJsonAsync<Group>("Groups/" + updateGroupAction.Group.Id, updateGroupAction.Group, jsonSerializerOptions);
+
+                    return (TResult)(object)new UpdateGroupResult
+                    {
+                        ResultStatus = StateEnum.Success,
+                        Group = await response.Content.ReadFromJsonAsync<Group>(),
+                    };
+
+
+                case DeleteUserAction deleteUserAction:
+                    response = await client.DeleteAsync("Users/" + deleteUserAction.Id);
 
                     return (TResult)(object)new DeleteUserResult
+                    {
+                        ResultStatus = StateEnum.Success,
+                    };
+
+                case DeleteGroupAction deleteGroupAction:
+                    response = await client.DeleteAsync("Groups/" + deleteGroupAction.Id);
+
+                    return (TResult)(object)new DeleteGroupResult
                     {
                         ResultStatus = StateEnum.Success,
                     };

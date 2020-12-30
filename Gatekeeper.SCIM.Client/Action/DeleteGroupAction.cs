@@ -1,10 +1,10 @@
 namespace Gatekeeper.SCIM.Client.Action
 {
-    public class DeleteUserAction : IAction
+    public class DeleteGroupAction : IAction
     {
         internal readonly string Id;
 
-        public DeleteUserAction(string id)
+        public DeleteGroupAction(string id)
         {
             Id = id;
         }
