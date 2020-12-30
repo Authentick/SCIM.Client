@@ -145,7 +145,7 @@ namespace Gatekeeper.SCIM.Client.Tests.Integration
             Assert.Equal(StateEnum.Failure, createUserResult.ResultStatus);
 
             // Deleting the user should work
-            DeleteUserAction deleteUserAction = new DeleteUserAction(user);
+            DeleteUserAction deleteUserAction = new DeleteUserAction(user.Id);
             DeleteUserResult deleteUserResult = await client.PerformAction<DeleteUserResult>(deleteUserAction);
             Assert.Equal(StateEnum.Success, deleteUserResult.ResultStatus);
             GetUsersResult thirdGetUsersRes = (await client.PerformAction<GetUsersResult>(new GetUsersAction()));
