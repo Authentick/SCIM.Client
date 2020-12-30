@@ -50,7 +50,7 @@ namespace Gatekeeper.SCIM.Client
                     else
                     {
                         ErrorResult errorResult = await response.Content.ReadFromJsonAsync<ErrorResult>();
-                       
+
                         return (TResult)(object)new CreateResult<User>
                         {
                             ResultStatus = StateEnum.Failure,
@@ -61,7 +61,6 @@ namespace Gatekeeper.SCIM.Client
 
                 case CreateAction<Group> createGroupAction:
                     response = await client.PostAsJsonAsync<Group>("Groups", createGroupAction.Resource, jsonSerializerOptions);
-                    System.Console.WriteLine(await response.Content.ReadAsStringAsync());
 
                     if (response.StatusCode == System.Net.HttpStatusCode.Created)
                     {
