@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v2.3.4
       with:
         path: SCIM.Client/
     - name: Setup .NET Core 5.0.100
@@ -27,7 +27,7 @@ jobs:
       run: dotnet test Gatekeeper.SCIM.Client.Tests.Unit/ --collect:"XPlat Code Coverage" -r TestResults/
       working-directory: SCIM.Client/
     - name: Clone Microsoft SCIM Reference Server
-      uses: actions/checkout@v2
+      uses: actions/checkout@v2.3.4
       with:
         repository: AzureAD/SCIMReferenceCode
         ref: ae181c1d0800a2a22333f0a4081c4012f39028e8
